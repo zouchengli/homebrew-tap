@@ -29,7 +29,7 @@ class Nexus < Formula
 
   def install
     ENV["JAVA_HOME"] = "/Users/chengli.zou/Library/Java/JavaVirtualMachines/azul-1.8.0_382/Contents/Home"
-    ENV["JDK_JAVA_OPTIONS"] = "--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED"
+    #ENV["JDK_JAVA_OPTIONS"] = "--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED"
     system "mvn", "install", "-DskipTests"
     system "unzip", "-o", "-d", "target", "assemblies/nexus-base-template/target/nexus-base-template-#{version}.zip"
 
