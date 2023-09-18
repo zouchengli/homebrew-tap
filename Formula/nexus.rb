@@ -1,8 +1,8 @@
 class Nexus < Formula
   desc "Repository manager for binary software components"
   homepage "https://www.sonatype.org/"
-  url "https://github.com/sonatype/nexus-public/archive/refs/tags/release-3.60.0-02.tar.gz"
-  sha256 "450a6b741d7ee54329a2b96e22753eb78843dd7fda9c4bda79f7044f6e3fb733"
+  url "https://github.com/sonatype/nexus-public/archive/refs/tags/release-3.40.1-01.tar.gz"
+  sha256 "ec11b10a4f3becc4a7932ffed63f0ce7e7d1451e69bbf5b74623326f47bf7db8"
   license "EPL-1.0"
 
   # As of writing, upstream is publishing both v2 and v3 releases. The "latest"
@@ -21,15 +21,14 @@ class Nexus < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux: "dcbe0eea411e6b44a8a86d0ee9ede0b8a1ba15aaeef69cecfb0185b9629f1ac6"
   end
 
-  #depends_on "maven" => :build
+  depends_on "maven" => :build
   #depends_on arch: :x86_64 # openjdk@8 is not supported on ARM
-  #depends_on "openjdk@8"
+  depends_on "corretto8"
 
   uses_from_macos "unzip" => :build
 
   def install
-    ENV["JAVA_HOME"] = "/Users/chengli.zou/Library/Java/JavaVirtualMachines/azul-1.8.0_382/Contents/Home"
-    #ENV["JDK_JAVA_OPTIONS"] = "--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED"
+    ENV["JAVA_HOME"] = Language::Java.java_home("1.8")
     system "mvn", "install", "-DskipTests"
     system "unzip", "-o", "-d", "target", "assemblies/nexus-base-template/target/nexus-base-template-#{version}.zip"
 
@@ -38,9 +37,7 @@ class Nexus < Formula
     libexec.install Dir["target/nexus-base-template-#{version}/*"]
 
     env = {
-      #JAVA_HOME:  Formula["openjdk@8"].opt_prefix,
-      JAVA_HOME: "/Users/chengli.zou/Library/Java/JavaVirtualMachines/azul-1.8.0_362/Contents/Home",
-      JDK_JAVA_OPTIONS: "--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED",
+      JAVA_HOME:  Formula["corretto8"].opt_prefix,
       KARAF_DATA: "${NEXUS_KARAF_DATA:-#{var}/nexus}",
       KARAF_LOG:  "#{var}/log/nexus",
       KARAF_ETC:  "#{etc}/nexus",
@@ -56,7 +53,10 @@ class Nexus < Formula
   end
 
   service do
-    run [opt_bin/"nexus", "start"]
+    run ["/bin/bash", "-c", opt_bin/"nexus start && tail -f /opt/homebrew/var/nexus/log/nexus.log"]
+    keep_alive true
+    log_path var/"log/nexus.log"
+    error_log_path var/"log/nexus.log"
   end
 
   test do
