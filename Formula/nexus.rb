@@ -21,8 +21,7 @@ class Nexus < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux: "dcbe0eea411e6b44a8a86d0ee9ede0b8a1ba15aaeef69cecfb0185b9629f1ac6"
   end
 
-  depends_on "maven" => :build
-  #depends_on arch: :x86_64 # openjdk@8 is not supported on ARM
+  depends_on arch: :arm64
   def caveats
     <<~EOS
       Please install the required Cask manually before using this formula:
