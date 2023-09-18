@@ -27,6 +27,7 @@ class Nexus < Formula
     <<~EOS
       Please install the required Cask manually before using this formula:
         brew install --cask corretto8
+        brew install maven --ignore-dependencies
     EOS
   end
 
@@ -35,7 +36,7 @@ class Nexus < Formula
 
   def install
     ENV["JAVA_HOME"] = `/usr/libexec/java_home -v 1.8`.chomp
-    system "java", "-version"
+    #system "java", "-version"
     system "mvn", "install", "-DskipTests"
     system "unzip", "-o", "-d", "target", "assemblies/nexus-base-template/target/nexus-base-template-#{version}.zip"
 
@@ -60,7 +61,7 @@ class Nexus < Formula
   end
 
   service do
-    run ["/bin/bash", "-c", opt_bin/"nexus start && tail -f /opt/homebrew/var/nexus/log/nexus.log"]
+    run ["/bin/bash", "-c", "ulimit -n 65536 && #{opt_bin}/nexus start && tail -f #{var}/nexus/log/nexus.log"]
     keep_alive true
     log_path var/"log/nexus.log"
     error_log_path var/"log/nexus.log"
