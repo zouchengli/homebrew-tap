@@ -34,7 +34,8 @@ class Nexus < Formula
   uses_from_macos "unzip" => :build
 
   def install
-    ENV["JAVA_HOME"] = Language::Java.java_home("1.8")
+    ENV["JAVA_HOME"] = `/usr/libexec/java_home -v 1.8`.chomp
+    system "java", "-version"
     system "mvn", "install", "-DskipTests"
     system "unzip", "-o", "-d", "target", "assemblies/nexus-base-template/target/nexus-base-template-#{version}.zip"
 
@@ -43,7 +44,7 @@ class Nexus < Formula
     libexec.install Dir["target/nexus-base-template-#{version}/*"]
 
     env = {
-      JAVA_HOME:  Language::Java.java_home("1.8"),
+      JAVA_HOME:  `/usr/libexec/java_home -v 1.8`.chomp,
       KARAF_DATA: "${NEXUS_KARAF_DATA:-#{var}/nexus}",
       KARAF_LOG:  "#{var}/log/nexus",
       KARAF_ETC:  "#{etc}/nexus",

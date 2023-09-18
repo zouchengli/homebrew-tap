@@ -1,6 +1,8 @@
-# Zouchengli Tap
+# ZouChengLi Tap
 
 ## How do I install these formulae?
+
+`brew info zouchengli/tap/<formula>`
 
 `brew install zouchengli/tap/<formula>`
 
