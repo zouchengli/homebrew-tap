@@ -23,7 +23,13 @@ class Nexus < Formula
 
   depends_on "maven" => :build
   #depends_on arch: :x86_64 # openjdk@8 is not supported on ARM
-  depends_on "corretto8"
+  def caveats
+    <<~EOS
+      Please install the required Cask manually before using this formula:
+        brew install --cask corretto8
+    EOS
+  end
+
 
   uses_from_macos "unzip" => :build
 
@@ -37,7 +43,7 @@ class Nexus < Formula
     libexec.install Dir["target/nexus-base-template-#{version}/*"]
 
     env = {
-      JAVA_HOME:  Formula["corretto8"].opt_prefix,
+      JAVA_HOME:  Language::Java.java_home("1.8"),
       KARAF_DATA: "${NEXUS_KARAF_DATA:-#{var}/nexus}",
       KARAF_LOG:  "#{var}/log/nexus",
       KARAF_ETC:  "#{etc}/nexus",
