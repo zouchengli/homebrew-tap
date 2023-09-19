@@ -13,10 +13,21 @@ class NexusAT3 < Formula
     odie "Unsupported operating system"
   end
 
+  def caveats
+    <<~EOS
+    Please install the required Cask manually using this formula:
+      brew install --cask corretto8
+      csrutil disable
+      sudo launchctl limit maxfiles 65536 65536
+      For more details, please refer to https://links.sonatype.com/products/nexus/system-reqs#filehandles
+    EOS
+  end
+
   def install
     libexec.install Dir["nexus-#{version}/*"]
     cp_r "#{buildpath}/nexus-#{version}/.install4j", "#{libexec}/.install4j"
     inreplace "#{libexec}/bin/nexus.vmoptions", "../sonatype-work/nexus3", "#{var}/nexus3"
+    inreplace "#{libexec}/bin/nexus.vmoptions", /^.+\Z/, "\\0\n-XX:-MaxFDLimit"
   end
 
   def post_install
