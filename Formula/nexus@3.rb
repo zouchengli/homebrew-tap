@@ -1,14 +1,14 @@
 class NexusAT3 < Formula
   desc "Repository manager for binary software components"
   homepage "https://www.sonatype.org/"
-  version "3.60.0-02"
+  version "3.69.0-02"
   
   if OS.mac?
-    url "https://download.sonatype.com/nexus/3/nexus-#{version}-mac.tgz"
-    sha256 "1b81b5dbdcc1f79c4116b02887683d435cceb6ad0a7c0ce364ae7ae2ca8bd08f"
+    url "https://download.sonatype.com/nexus/3/nexus-#{version}-java8-mac.tgz"
+    sha256 "a8ee60af53db81c2fca1475fe04370a363064609fecd1dba8bba8a586b499a03"
   elsif OS.linux?
-    url "https://download.sonatype.com/nexus/3/nexus-#{version}-unix.tar.gz"
-    sha256 "607f6a6286ae346671f9eb4bf47bb26f4238c7c6d4aeec6b7122c28f558040e3"
+    url "https://download.sonatype.com/nexus/3/nexus-#{version}-java8-unix.tar.gz"
+    sha256 "29952f663982bd9781d5bc352471727826943452cfe8e9aa0e9b60ad01531d1b"
   else
     odie "Unsupported operating system"
   end
